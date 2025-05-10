@@ -1,41 +1,23 @@
-import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
-import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+import react from "@vitejs/plugin-react-swc";
+import svgr from "vite-plugin-svgr";
 
+// https://vite.dev/config/
 export default defineConfig({
+  server: {
+    host: "0.0.0.0", // This exposes the server to all network interfaces
+    port: 5173, // You can change this to another port if needed
+  },
+
   plugins: [
     react(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer(),
-          ),
-        ]
-      : []),
+    svgr({
+      svgrOptions: {
+        icon: true,
+        // This will transform your SVG to a React component
+        exportType: "named",
+        namedExport: "ReactComponent",
+      },
+    }),
   ],
-  resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "src"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
-    },
-  },
-  root: path.resolve(import.meta.dirname, "client"),
-  build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
-    emptyOutDir: true,
-  },
-  server: {
-    port: 5000,
-    host: '0.0.0.0',
-    strictPort: true,
-    hmr: {
-      clientPort: 443
-    },
-    allowedHosts: [
-      '9f0577d0-5d55-4140-b528-f35f53f53f52-00-xmjok3wvnzbo.picard.replit.dev'
-    ]
-  },
 });
