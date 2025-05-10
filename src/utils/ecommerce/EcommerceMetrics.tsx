@@ -5,6 +5,7 @@ import {
 } from "../../icons";
 import Badge from "../ui/badge/Badge";
 import { MessageSquareMore, PackageOpen } from 'lucide-react';
+import { Skeleton } from "../../components/ui/skeleton";
 
 interface SmsHistory {
   id: number;
@@ -84,23 +85,23 @@ export default function EcommerceMetrics() {
       {isLoading ? (
         <>
           <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-            <Skeleton variant="circular" width="48px" height="48px" />
+            <Skeleton className="h-12 w-12 rounded-full" />
             <div className="flex items-end justify-between mt-5">
               <div>
-                <Skeleton className="w-24 h-4 mb-2" />
-                <Skeleton className="w-32 h-6" />
+                <Skeleton className="h-4 w-24 mb-2" />
+                <Skeleton className="h-6 w-32" />
               </div>
-              <Skeleton className="w-20 h-6" />
+              <Skeleton className="h-6 w-20" />
             </div>
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-            <Skeleton variant="circular" width="48px" height="48px" />
+            <Skeleton className="h-12 w-12 rounded-full" />
             <div className="flex items-end justify-between mt-5">
               <div>
-                <Skeleton className="w-24 h-4 mb-2" />
-                <Skeleton className="w-32 h-6" />
+                <Skeleton className="h-4 w-24 mb-2" />
+                <Skeleton className="h-6 w-32" />
               </div>
-              <Skeleton className="w-20 h-6" />
+              <Skeleton className="h-6 w-20" />
             </div>
           </div>
         </>
