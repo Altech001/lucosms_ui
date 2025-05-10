@@ -10,7 +10,7 @@ import Templates from "./pages/Templates";
 import ComposeMessages from "./pages/Compose/ComposeMessage";
 import { BalanceProvider } from "./context/BalanceContext";
 import React from 'react';
-import './App.css';
+import './index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
