@@ -30,6 +30,9 @@ export default defineConfig({
   server: {
     port: 5000,
     host: '0.0.0.0',
-    allowedHosts: ['9f0577d0-5d55-4140-b528-f35f53f53f52-00-xmjok3wvnzbo.picard.replit.dev']
+    strictPort: true,
+    hmr: {
+      clientPort: 443
+    }
   },
 });
