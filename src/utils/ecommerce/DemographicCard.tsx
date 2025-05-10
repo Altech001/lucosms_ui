@@ -60,13 +60,30 @@ export default function DemographicCard() {
     return (
       <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
         <div className="p-4 space-y-4">
-          <Skeleton className="h-8 w-[200px]" />
-          <Skeleton className="h-[200px] w-full" />
+          <div className="flex justify-between items-center mb-4">
+            <Skeleton className="h-8 w-[200px]" />
+            <Skeleton className="h-8 w-[100px]" />
+          </div>
+          <Skeleton className="h-[200px] w-full" variant="rectangular" />
           <div className="grid grid-cols-2 gap-4">
-            <Skeleton className="h-20" />
-            <Skeleton className="h-20" />
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-1/2" />
+              <Skeleton className="h-12" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-1/2" />
+              <Skeleton className="h-12" />
+            </div>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (smsError || deliveryError) {
+    return (
+      <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+        <p className="text-red-600">Error loading data. Please try again later.</p>
       </div>
     );
   }
