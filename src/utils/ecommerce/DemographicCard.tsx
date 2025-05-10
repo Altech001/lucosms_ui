@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { useApiQuery } from "../../hooks/useApiQuery";
+import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "../../components/ui/skeleton";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
@@ -13,42 +14,53 @@ interface NetworkData {
   deliveryRate: number;
 }
 
-interface SmsHistory {
-  id: number;
-  recipient: string;
-  message: string;
-  status: "sent" | "failed" | "pending";
-  cost: number;
-  created_at: string;
-  network?: string; // Optional, if API provides it
+async function fetchSmsHistory() {
+  const response = await fetch(
+    `https://luco-sms-api.onrender.com/api/v1/sms_history?user_id=1&skip=0&limit=1000`
+  );
+  if (!response.ok) {
+    throw new Error('Failed to fetch SMS history');
+  }
+  return response.json();
 }
 
-interface DeliveryReport {
-  status: "sent" | "failed" | "pending";
+async function fetchDeliveryReports() {
+  const response = await fetch(
+    `https://luco-sms-api.onrender.com/api/v1/delivery_report?user_id=1`
+  );
+  if (!response.ok) {
+    throw new Error('Failed to fetch delivery reports');
+  }
+  return response.json();
 }
 
 export default function DemographicCard() {
   const [country, setCountry] = useState<"Uganda" | "Kenya">("Uganda");
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: smsHistory, isLoading: smsLoading, error: smsError } = useApiQuery<SmsHistory[]>({
-    endpoint: `https://luco-sms-api.onrender.com/api/v1/sms_history?user_id=1&skip=0&limit=1000`,
+  const { 
+    data: smsHistory,
+    isLoading: smsLoading,
+    error: smsError
+  } = useQuery({
     queryKey: ['smsHistory'],
+    queryFn: fetchSmsHistory,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const { data: deliveryReports, isLoading: reportsLoading, error: deliveryError } = useApiQuery<DeliveryReport[]>({
-    endpoint: `https://luco-sms-api.onrender.com/api/v1/delivery_report?user_id=1`,
+  const {
+    data: deliveryReports,
+    isLoading: reportsLoading,
+    error: reportsError
+  } = useQuery({
     queryKey: ['deliveryReports'],
+    queryFn: fetchDeliveryReports,
     enabled: !!smsHistory?.length,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const closeDropdown = () => {
-    setIsOpen(false);
-  };
+  const toggleDropdown = () => setIsOpen(!isOpen);
+  const closeDropdown = () => setIsOpen(false);
 
   const handleCountryChange = (newCountry: "Uganda" | "Kenya") => {
     setCountry(newCountry);
@@ -81,20 +93,12 @@ export default function DemographicCard() {
     );
   }
 
-  if (smsError || deliveryError) {
+  if (smsError || reportsError) {
     return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-5">
-        <p className="text-red-600">Error loading data. Please try again later.</p>
-      </div>
-    );
-  }
-
-  if (smsError || deliveryError) {
-    return (
-      <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
-        <div className="p-4 text-red-500">
-          Error loading data. Please try again later.
-        </div>
+      <div className="rounded-xl border border-red-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
+        <p className="text-red-600 text-center">
+          {smsError?.message || reportsError?.message || 'Error loading data. Please try again later.'}
+        </p>
       </div>
     );
   }
@@ -109,15 +113,21 @@ export default function DemographicCard() {
       sms.recipient.startsWith(countryPrefixes[country])
     ) || [];
 
-    const networks = country === "Uganda" ? ["Airtel UG", "MTN UG"] : ["Safaricom KE", "Airtel KE"];
+    const networks = country === "Uganda" 
+      ? [
+          { name: "Airtel UG", logo: "/images/country/airtel_logo1.png" },
+          { name: "MTN UG", logo: "/images/country/mtn_logo.svg" }
+        ]
+      : [
+          { name: "Safaricom KE", logo: "/images/country/safaricom_logo.svg" },
+          { name: "Airtel KE", logo: "/images/country/airtel_ke_logo.svg" }
+        ];
 
-    const networkData = networks.map(network => ({
-      name: network,
-      logo: `/images/country/${network.toLowerCase()}_logo.svg`,
-      customers: filteredSms.length,
-      deliveryRate: 98 // Example rate
+    return networks.map(network => ({
+      ...network,
+      customers: filteredSms.length || 0,
+      deliveryRate: (deliveryReports?.filter(r => r.status === "sent").length / (deliveryReports?.length || 1)) * 100 || 0
     }));
-    return networkData;
   };
 
   const networkData = getNetworkData();
@@ -161,10 +171,7 @@ export default function DemographicCard() {
         </div>
       </div>
       <div className="px-4 py-6 my-6 overflow-hidden border border-gray-200 rounded-2xl dark:border-gray-800 sm:px-6">
-        <div
-          id="mapOne"
-          className="mapOne map-btn -mx-4 -my-6 h-[212px] w-[252px] 2xsm:w-[307px] xsm:w-[358px] sm:-mx-6 md:w-[668px] lg:w-[634px] xl:w-[393px] 2xl:w-[554px]"
-        >
+        <div className="mapOne -mx-4 -my-6 h-[212px] w-[252px] 2xsm:w-[307px] xsm:w-[358px] sm:-mx-6 md:w-[668px] lg:w-[634px] xl:w-[393px] 2xl:w-[554px]">
           <CountryMap country={country} />
         </div>
       </div>
