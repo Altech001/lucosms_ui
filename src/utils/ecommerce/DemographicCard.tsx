@@ -64,15 +64,17 @@ export default function DemographicCard() {
             <Skeleton className="h-8 w-[200px]" />
             <Skeleton className="h-8 w-[100px]" />
           </div>
-          <Skeleton className="h-[200px] w-full" variant="rectangular" />
+          <Skeleton className="h-[300px] w-full" variant="rectangular" />
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Skeleton className="h-6 w-1/2" />
-              <Skeleton className="h-12" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-4 w-3/4" />
             </div>
             <div className="space-y-2">
               <Skeleton className="h-6 w-1/2" />
-              <Skeleton className="h-12" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-4 w-3/4" />
             </div>
           </div>
         </div>

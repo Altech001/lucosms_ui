@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 
+import { Skeleton } from "../../components/ui/skeleton";
+
 interface Transaction {
   id: number;
   user_id: number;
@@ -11,6 +13,19 @@ interface Transaction {
 }
 
 export default function StatisticsChart() {
+  const renderSkeleton = () => (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-8 w-[200px]" />
+        <Skeleton className="h-8 w-[120px]" />
+      </div>
+      <Skeleton className="h-[400px] w-full" variant="rectangular" />
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-6 w-[150px]" />
+        <Skeleton className="h-6 w-[100px]" />
+      </div>
+    </div>
+  );
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

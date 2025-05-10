@@ -82,9 +82,28 @@ export default function EcommerceMetrics() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
       {isLoading ? (
-        <div className="col-span-2 p-4 text-center text-gray-500 dark:text-gray-400">
-          Loading metrics...
-        </div>
+        <>
+          <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+            <Skeleton variant="circular" width="48px" height="48px" />
+            <div className="flex items-end justify-between mt-5">
+              <div>
+                <Skeleton className="w-24 h-4 mb-2" />
+                <Skeleton className="w-32 h-6" />
+              </div>
+              <Skeleton className="w-20 h-6" />
+            </div>
+          </div>
+          <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+            <Skeleton variant="circular" width="48px" height="48px" />
+            <div className="flex items-end justify-between mt-5">
+              <div>
+                <Skeleton className="w-24 h-4 mb-2" />
+                <Skeleton className="w-32 h-6" />
+              </div>
+              <Skeleton className="w-20 h-6" />
+            </div>
+          </div>
+        </>
       ) : error ? (
         <div className="col-span-2 p-4 text-center text-red-500 dark:text-red-400">
           {error}

@@ -8,6 +8,7 @@ import TextArea from "../utils/form/input/TextArea";
 import Input from "../utils/form/input/InputField";
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
+import Skeleton from '@mui/material/Skeleton';
 
 interface Template {
   id: number;
@@ -33,6 +34,7 @@ export default function Templates() {
   const [alert, setAlert] = useState<AlertState | null>(null);
   const [activeTab, setActiveTab] = useState<"all" | "favorite">("all");
   const [isCreating, setIsCreating] = useState<boolean>(false); // New state for loading spinner
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const navigate = useNavigate();
   const userId = 1; // Hardcoded for now; replace with dynamic user ID from auth context
@@ -72,6 +74,8 @@ export default function Templates() {
         message: "Failed to fetch templates. Please try again.",
       });
       setTimeout(() => setAlert(null), 3000);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -357,7 +361,26 @@ export default function Templates() {
               </div>
             </div>
 
-            {filteredTemplates.length === 0 ? (
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, index) => (
+                  <div key={index} className="group flex flex-col rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+                    <div className="flex items-center justify-between mb-2">
+                      <Skeleton className="h-5 w-[70%]" />
+                      <Skeleton variant="circular" width="24px" height="24px" />
+                    </div>
+                    <Skeleton className="h-16 w-full mb-4" />
+                    <div className="flex justify-between mt-auto">
+                      <Skeleton className="h-8 w-20" />
+                      <div className="flex space-x-1">
+                        <Skeleton className="h-8 w-16" />
+                        <Skeleton className="h-8 w-16" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : filteredTemplates.length === 0 ? (
               searchQuery ? (
                 <div className="text-center py-12">
                   <p className="text-gray-500 dark:text-gray-400">No templates found matching "{searchQuery}"</p>
