@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useApiQuery } from "../../hooks/useApiQuery";
 import { Skeleton } from "../../components/ui/skeleton";
-import { API_CONFIG } from "../../lib/api-services";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { MoreDotIcon } from "../../icons";
@@ -33,12 +32,12 @@ export default function DemographicCard() {
   const [isOpen, setIsOpen] = useState(false);
 
   const { data: smsHistory, isLoading: smsLoading, error: smsError } = useApiQuery<SmsHistory[]>({
-    endpoint: `${API_CONFIG.BASE_URL}/api/v1/sms_history?user_id=1&skip=0&limit=1000`,
+    endpoint: `https://luco-sms-api.onrender.com/api/v1/sms_history?user_id=1&skip=0&limit=1000`,
     queryKey: ['smsHistory'],
   });
 
   const { data: deliveryReports, isLoading: reportsLoading, error: deliveryError } = useApiQuery<DeliveryReport[]>({
-    endpoint: `${API_CONFIG.BASE_URL}/api/v1/delivery_report?user_id=1`,
+    endpoint: `https://luco-sms-api.onrender.com/api/v1/delivery_report?user_id=1`,
     queryKey: ['deliveryReports'],
     enabled: !!smsHistory?.length,
   });
