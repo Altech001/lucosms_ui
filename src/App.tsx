@@ -9,11 +9,25 @@ import Billings from "./pages/Billings";
 import Templates from "./pages/Templates";
 import ComposeMessages from "./pages/Compose/ComposeMessage";
 import { BalanceProvider } from "./context/BalanceContext";
-// import Promo from "./pages/PromoCodes/Promo";
+import React from 'react';
+import './App.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // Data remains fresh for 5 minutes
+      cacheTime: 1000 * 60 * 30, // Cache persists for 30 minutes
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export default function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <BalanceProvider>
         <Router>
           <ScrollToTop />
@@ -38,6 +52,7 @@ export default function App() {
           </Routes>
         </Router>
       </BalanceProvider>
-    </>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
